@@ -24,10 +24,6 @@ export default function Navbar() {
       href: "/projects",
     },
     {
-      title: "Contact",
-      href: "/contact",
-    },
-    {
       title: "Resume",
       href: "/resume.pdf",
     },

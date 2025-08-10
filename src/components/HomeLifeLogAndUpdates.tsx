@@ -36,7 +36,7 @@ export default function HomeLifeLogAndUpdates() {
         >
           <h3 className="text-xl font-semibold  mb-4">{year}</h3>
           <div className="space-y-6">
-            {changelog[year].map((item, i) => (
+            {changelog[year].reverse().map((item, i) => (
               <motion.div
                 key={i}
                 initial={{
