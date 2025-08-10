@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --mouse-x: 0px;
+  --mouse-y: 0px;
+}
+
+.onNavlinkActiveBottomEffect {
+  position: relative;
+}
+
+.onNavlinkActiveBottomEffect::before {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    cyan,
+    rgba(0, 0, 0, 0)
+  );
+  bottom: 0;
+  left: 0;
+  opacity: 1;
+  transform: translateY(50%);
+}
+.onNavlinkActiveBottomEffect::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    cyan,
+    rgba(0, 0, 0, 0)
+  );
+  top: 0;
+  left: 0;
+  opacity: 1;
+  transform: translateY(-50%);
+}
