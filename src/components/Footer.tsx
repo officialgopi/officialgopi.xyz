@@ -7,7 +7,7 @@ const footerLinks = [
     title: "Column 1",
     links: [
       { name: "Home", href: "/" },
-      { name: "Blogs", href: "/blogs" },
+      // { name: "Blogs", href: "/blogs" },
       { name: "Projects", href: "/projects" },
       { name: "Resume", href: "/resume.pdf" },
     ],
