@@ -114,7 +114,7 @@ The portfolio includes a comprehensive blog system with technical articles cover
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/officialgopi.xyz.git
+   git clone https://github.com/officialgopi/officialgopi.xyz.git
    cd officialgopi.xyz
    ```
 
@@ -223,7 +223,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Portfolio**: [officialgopi.xyz](https://officialgopi.xyz)
 - **GitHub**: [@OfficialGopi](https://github.com/OfficialGopi)
-- **LinkedIn**: [Gopikanta Mondal](https://linkedin.com/in/yourprofile)
+- **LinkedIn**: [Gopikanta Mondal](https://linkedin.com/in/gopikanta-mondal)
 
 ## 🙏 Acknowledgments
 
