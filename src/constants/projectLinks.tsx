@@ -1,10 +1,10 @@
 export const projectLinks = [
   {
-    src: "/projects-images/chatapp.png",
+    src: "/projects-images/hellotalk.png",
     title: "Real Time ChatApp",
     description:
       "A full-stack MERN chat app with Socket.io for instant one-on-one messaging, secure JWT authentication, MongoDB chat history, and a responsive Material UI interface, delivering seamless real-time communication across devices",
-    link: "https://chatapp.officialgopi.xyz/",
+    link: "https://hellotalk.officialgopi.xyz/",
     techStack: [
       "React",
       "TailwindCss",
@@ -12,8 +12,11 @@ export const projectLinks = [
       "ExpressJS",
       "MongoDB",
       "Socket.io",
+      "TypeScript",
+      "Cloudinary",
+      "JWT",
     ],
-    githubLink: "https://github.com/OfficialGopi/ChatApp",
+    githubLink: "https://github.com/OfficialGopi/hellotalk",
   },
   {
     src: "/projects-images/coderroute.png",
