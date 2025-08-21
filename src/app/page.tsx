@@ -11,14 +11,18 @@ import HireMeAsFreeLancerComponent from "@/components/HireMeAsFreeLancerComponen
 import HomeLifeLogAndUpdates from "@/components/HomeLifeLogAndUpdates";
 
 const page = () => {
-  const links = {
+  const links: {
+    [key: string]: {
+      name: string;
+      url?: string;
+    };
+  } = {
     coderroute: {
       name: "CoderRoute",
       url: "https://coderroute.officialgopi.xyz",
     },
-    rtclass: {
-      name: "RTClass",
-      url: "https://rtclass.officialgopi.xyz",
+    smartclass: {
+      name: "SMARTClass",
     },
   };
   return (
@@ -44,7 +48,7 @@ const page = () => {
           <p className="text-lg tracking-tight text-neutral-700 dark:text-neutral-300">
             Building{" "}
             <Link
-              href={links.coderroute.url}
+              href={links.coderroute.url ?? "#"}
               target="_blank"
               className="p-1 font-semibold rounded-sm mr-1 bg-neutral-100 dark:bg-neutral-800"
             >
@@ -52,11 +56,11 @@ const page = () => {
             </Link>
             ,
             <Link
-              href={links.rtclass.url}
+              href={links.smartclass.url ?? "#"}
               target="_blank"
               className="p-1 font-semibold rounded-sm mr-1 bg-neutral-100 dark:bg-neutral-800"
             >
-              {links.rtclass.name}
+              {links.smartclass.name}
             </Link>
             and other{" "}
             <span className="p-1 font-semibold rounded-sm mr-1 ">

@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "Portfolio | OfficialGopi",
   description:
     "OfficialGopi – Full-stack developer specializing in MERN stack, WebRTC, Prisma, and Tailwind CSS. I build scalable, high-performance web apps, real-time communication platforms, and modern, responsive UIs with clean code and optimized performance.",
+  icons: {
+    icon: "/profile-pic.jpg",
+    apple: "/profile-pic.jpg",
+  },
 };
 
 export default function RootLayout({
