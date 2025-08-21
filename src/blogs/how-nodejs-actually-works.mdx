@@ -1,0 +1,126 @@
+---
+title: "How Node.js Actually Works"
+date: "2025-08-22"
+excerpt: "Explore Node.js internals: V8, libuv, the event loop phases, thread pool, microtasks vs macrotasks, and practical patterns for performance and reliability."
+---
+
+# How Node.js Actually Works
+
+Node.js delivers high concurrency with a single JS thread by combining **V8** for execution and **libuv** for asynchronous I/O.
+
+<!-- IMAGE: Architecture overview – V8 (JS) + libuv (event loop + thread pool) + OS -->
+
+## Key Components
+
+### V8 JavaScript Engine
+
+- JIT compiles JS to machine code for speed
+- Modern GC strategies; fast property access and inline caches
+
+### libuv
+
+- Cross‑platform async I/O library
+- Provides the **event loop** + **thread pool** (4 by default, configurable)
+
+<!-- IMAGE: libuv event loop and thread pool diagram -->
+
+## Event Loop Phases (High‑Level)
+
+```text
+┌──────── timers (setTimeout / setInterval)
+├──────── pending callbacks (deferred I/O)
+├──────── idle/prepare (internal)
+├──────── poll (I/O events, execute callbacks)
+├──────── check (setImmediate)
+└──────── close callbacks (e.g., socket 'close')
+```
+
+Two distinct queues also matter:
+
+- **Macrotasks**: timers, I/O callbacks
+- **Microtasks**: `Promise.then`, `queueMicrotask` (run between macrotasks)
+
+### Microtasks vs Macrotasks
+
+```js
+setTimeout(() => console.log("timeout"), 0);
+Promise.resolve().then(() => console.log("microtask"));
+// Output: microtask -> timeout
+```
+
+<!-- IMAGE: Queue timing diagram showing microtasks running between macrotasks -->
+
+## Thread Pool (File I/O, Crypto, DNS)
+
+Some operations use libuv’s thread pool to avoid blocking the main thread.
+
+```js
+const fs = require("fs");
+fs.readFile("data.txt", "utf8", (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+```
+
+Increase pool size (if many concurrent I/O tasks):
+
+```bash
+UV_THREADPOOL_SIZE=8 node server.js
+```
+
+## Practical Patterns
+
+### Offload CPU‑Bound Tasks
+
+```js
+// worker_threads (for heavy CPU work)
+const { Worker } = require("node:worker_threads");
+new Worker("./heavy-task.js", { workerData: { n: 5_000_000 } });
+```
+
+### Avoid Blocking Calls
+
+- Don’t use sync FS/crypto on the hot path
+- Stream large payloads; backpressure with `.pipe()`
+
+### Schedule Wisely
+
+```js
+// Use setImmediate for post‑I/O continuation
+req.on("end", () => {
+  setImmediate(() => handleRequest(req, res));
+});
+```
+
+### Measure and Observe
+
+```js
+// async_hooks or perf_hooks to trace async resources
+const asyncHooks = require("async_hooks");
+asyncHooks
+  .createHook({
+    init: (id, type, trigger) => {
+      /* record */
+    },
+    destroy: (id) => {
+      /* cleanup */
+    },
+  })
+  .enable();
+```
+
+<!-- IMAGE: Flamegraph or timeline screenshot placeholder for event loop activity -->
+
+## Common Pitfalls
+
+- Long synchronous loops block everything (no rendering, no I/O)
+- Burst of microtasks can starve timers
+- Large JSON.stringify/parse on hot paths
+
+## Summary
+
+- V8 executes JS fast; libuv orchestrates async I/O
+- Event loop phases and microtasks/macrotasks ordering shape behavior
+- Offload CPU work, stream I/O, and monitor async activity for performance
+
+<!-- IMAGE: Final overview: best practices checklist visual -->

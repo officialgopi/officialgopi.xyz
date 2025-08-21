@@ -1,0 +1,112 @@
+---
+title: "SmartClass – AI‑Powered Roadmaps & YouTube Learning for Students"
+date: "2025-08-05"
+excerpt: "An AI assistant that converts goals into step‑by‑step roadmaps, curates YouTube lectures, and tracks learning progress. Covers architecture, retrieval, ranking, and UX decisions."
+---
+
+# SmartClass – AI‑Powered Roadmaps & YouTube Learning for Students
+
+SmartClass helps students turn outcomes (e.g., “learn Full‑Stack”) into **actionable roadmaps**, pairing each step with high‑quality YouTube lectures and practice tasks.
+
+<!-- IMAGE: SmartClass homepage with roadmap view and video panel -->
+
+## Project Name and Context
+
+- **Project**: SmartClass (learning assistant)
+- **Audience**: Students and self‑learners targeting practical outcomes
+- **Why**: Abundance of content, shortage of **structured paths**
+
+## Functionality and Purpose
+
+- **Roadmap generation** from a goal and skill level
+- **Curated lectures** with quality filters (duration, engagement, recency)
+- **Practice tasks** per node with difficulty ramp
+- **Progress tracking** and reminders
+- **Offline notes** and flashcards
+
+<!-- IMAGE: Roadmap graph with nodes and edges; right panel shows selected video -->
+
+## Problem It Solves
+
+- Reduces overwhelm; replaces random tutorials with structured tracks
+- Finds current, credible videos that actually teach
+- Encourages consistency via reminders + visible progress
+
+## Tech Stack Used
+
+- **Frontend**: Next.js 15, Tailwind CSS, Zustand
+- **Backend**: Node.js (API), PostgreSQL (progress), Redis (queues/cache)
+- **AI/RAG**: OpenAI/LLM, vector store (pgvector/Weaviate), rerankers
+- **Ingestion**: YouTube Data API v3, periodic refresh
+
+## How I Built It (or Am Building It)
+
+### Ingestion & Indexing
+
+```ts
+// fetch videos by topic, apply quality filters, store embeddings
+for (const topic of topics) {
+  const videos = await yt.search(topic, { max: 50 });
+  const curated = videos.filter((v) => v.duration < 60 && v.views > 5000);
+  await embedAndUpsert(
+    curated.map((v) => ({
+      id: v.id,
+      title: v.title,
+      desc: v.description,
+    }))
+  );
+}
+```
+
+### Roadmap Synthesis
+
+```ts
+// prompt + tools -> DAG of concepts with prerequisites
+const roadmap = await llm.plan({ goal: "Full‑Stack Web", level: "beginner" });
+// normalize to nodes/edges, attach evaluation rubrics
+```
+
+### Retrieval & Ranking
+
+```ts
+// hybrid search: dense + lexical + rerank
+const candidates = await searchVideos(node.topic);
+const reranked = await rerank(candidates, node.learningOutcome);
+return pickTop(reranked, 3);
+```
+
+### Progress Tracking
+
+```sql
+CREATE TABLE progress (
+  user_id UUID,
+  node_id TEXT,
+  status TEXT CHECK (status IN ('todo','doing','done')),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  PRIMARY KEY (user_id, node_id)
+);
+```
+
+<!-- IMAGE: Progress dashboard and reminder settings UI -->
+
+## Unique Implementations or System Design
+
+- **DAG‑based roadmap** with prerequisite checks
+- **Hybrid retrieval** (dense + BM25) then **learning‑outcome rerank**
+- **Cold‑start filters**: duration, engagement, recency, channel trust score
+- **Practice rubric** to validate completion objectively
+
+## Realistic Challenges or Tradeoffs
+
+- **Ranking drift** if you don’t refresh embeddings and signals
+- **YouTube API quotas**; batch and cache aggressively
+- **Subjectivity** in “quality” → use explicit signals + user feedback
+- **Motivation**: build gentle nudges, not nagging
+
+## What I Learned or Improved
+
+- Treat AI as an orchestrator; keep data models explicit
+- Clear UX beats clever prompts—visibility drives completion
+- Reliability: background jobs, retries, and observability from day one
+
+<!-- IMAGE: Architecture diagram showing ingestion, vector DB, API, and UI flows -->

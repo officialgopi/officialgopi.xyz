@@ -1,0 +1,184 @@
+---
+title: "HelloTalk – A Real-time Chat AppW"
+date: "2025-08-17"
+excerpt: "A full‑stack real‑time chat app with private/group chats, friend requests, notifications, attachments, and an admin dashboard. This post covers the architecture, MongoDB data modeling, Socket.IO events, security, and tradeoffs behind HelloTalk."
+---
+
+# HelloTalk – A Real-time Chat App with Role Management
+
+HelloTalk is a production-grade real-time chat application featuring role-aware moderation, rich messaging, and a modern admin dashboard. It’s built as a monorepo with separate `client` and `server` apps, following the repository layout in the public codebase.
+
+<!-- IMAGE: Landing/dashboard view of HelloTalk with recent chats and presence indicators -->
+
+> Repo: [HelloTalk on GitHub](https://github.com/OfficialGopi/hellotalk)
+
+## Project Name and Context
+
+- **Project**: HelloTalk (real-time chat)
+- **Goal**: Reliable, safe, and fast messaging for communities and small teams
+- **Why**: Most open chat apps lack fine-grained moderation, a social graph, and admin-first observability
+
+<!-- IMAGE: Role matrix screenshot showing Admin vs User capabilities and moderation tools -->
+
+## Functionality and Purpose
+
+- **Private and Group Chats** with typing indicators and online users list
+- **Friend Requests + Notifications** to build a social graph
+- **Admin Dashboard**: users, chats, messages, and a 7‑day message chart
+- **Attachments** (Cloudinary), multi-file upload per message
+- **Search**: find users and filter available members to add to chats
+- **Moderation**: admin verification, basic ban/report flows (server endpoints)
+- **Modern UI**: lazy-loaded routes, toasts, charts, responsive design
+
+<!-- IMAGE: Chat thread with typing indicator and read receipts (delivered/seen states) -->
+
+## Tech Stack Used
+
+- **Client**: React 19, Vite 7, Redux Toolkit + RTK Query, React Router 7, Socket.IO Client, Tailwind CSS 4, Chart.js
+- **Server**: Node.js, Express 5, TypeScript, Socket.IO 4, Mongoose 8, Zod, Multer, Cloudinary, Winston
+- **Database**: MongoDB (Atlas/self-hosted)
+- **Auth**: HTTP‑only cookies (`user-token`, `admin-token`) with rotating expiries and server-side verification
+- **Infra**: Docker, docker-compose, Github Actions; Vercel (client) + Railway/Fly.io (services)
+
+> Details reflect the repo structure and README: [HelloTalk repo](https://github.com/OfficialGopi/hellotalk)
+
+<!-- IMAGE: High-level architecture diagram (client, API, WS gateway, DB, Redis optional, storage) -->
+
+## How I Built It
+
+### Monorepo layout
+
+```text
+hellotalk/
+  client/              # React app (Vite)
+  server/              # Node/Express API + Socket.IO
+  docker-compose.yml   # Local Docker setup for both services
+```
+
+### Environment & Auth
+
+- **Server env**: `CLIENT_URL`, `MONGO_URI`, Cloudinary keys, JWT secrets, ports
+- **Client env**: `VITE_SERVER` for API base URL
+- **Cookies**: `secure: true`, `sameSite: "none"` – for local HTTP dev you may need HTTPS or relax cookie settings temporarily
+
+<!-- IMAGE: Admin login screen and cookie/session flow diagram -->
+
+### MongoDB Data Modeling (Mongoose)
+
+```ts
+// server/src/app/models/message.model.ts
+import { Schema, model } from "mongoose";
+
+const messageSchema = new Schema(
+  {
+    conversationId: { type: Schema.Types.ObjectId, ref: "Chat", index: true },
+    senderId: { type: Schema.Types.ObjectId, ref: "User", index: true },
+    body: { type: String },
+    attachments: [{ url: String, type: String, bytes: Number }],
+  },
+  { timestamps: true }
+);
+
+export default model("Message", messageSchema);
+```
+
+```ts
+// server/src/app/models/chat.model.ts
+import { Schema, model } from "mongoose";
+
+const chatSchema = new Schema(
+  {
+    title: { type: String },
+    isGroup: { type: Boolean, default: false },
+    members: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    lastMessageAt: { type: Date },
+  },
+  { timestamps: true }
+);
+
+export default model("Chat", chatSchema);
+```
+
+<!-- IMAGE: ER diagram style sketch for users, chats, messages, requests -->
+
+### Socket.IO Events
+
+Client and server share event names. Common events (subset):
+
+```ts
+// server/src/app/constants/events.ts
+export const EVENTS = {
+  NEW_MESSAGE: "NEW_MESSAGE",
+  NEW_MESSAGE_ALERT: "NEW_MESSAGE_ALERT",
+  START_TYPING: "START_TYPING",
+  STOP_TYPING: "STOP_TYPING",
+  CHAT_JOINED: "CHAT_JOINED",
+  CHAT_LEAVED: "CHAT_LEAVED",
+  ONLINE_USERS: "ONLINE_USERS",
+  ALERT: "ALERT",
+  REFETCH_CHATS: "REFETCH_CHATS",
+  NEW_ATTACHMENT: "NEW_ATTACHMENT",
+  NEW_REQUEST: "NEW_REQUEST",
+} as const;
+```
+
+### Attachments & Cloudinary
+
+- **Upload** via Multer on the server (`multipart/form-data`)
+- **Store** raw files in Cloudinary with metadata saved on the message
+- **Purge** Cloudinary assets on message deletions
+
+```ts
+// server/src/app/controllers/chat.controller.ts (snippet)
+const upload = multer({ limits: { fileSize: 10 * 1024 * 1024 } });
+// handle /chat/message with files -> upload to Cloudinary, persist metadata
+```
+
+<!-- IMAGE: File upload UI with progress and preview, plus Cloudinary upload diagram -->
+
+### Admin Dashboard
+
+- Stats (users/chats/messages), 7‑day chart (Chart.js)
+- Server routes under `/admin/*` for session and list endpoints
+- Admin secret verification + separate cookie (`admin-token`)
+
+<!-- IMAGE: Admin dashboard with charts and tables -->
+
+## Unique Implementations / System Design
+
+- **Social Graph**: friend requests, acceptance flow, and notifications
+- **Socket Auth**: authenticate sockets using `user-token` cookie, room joins per chat
+- **Lazy + RTK Query**: efficient client data fetching and optimistic updates
+- **Cloudinary-first media** with signed URLs and cleanup hooks
+
+> API overview and routes summarized from the repo README: [HelloTalk](https://github.com/OfficialGopi/hellotalk)
+
+<!-- IMAGE: System diagram for socket gateway, API, DB, and client flows -->
+
+## Realistic Challenges or Tradeoffs
+
+- **Cookie + CORS in Dev**: HTTP‑only cookies require HTTPS or relaxed settings locally; this can confuse local testing
+- **WebSocket Fan‑out**: big rooms require careful partitioning and backpressure
+- **Attachment Safety**: content-type validation and size limits add latency but improve trust
+- **Search vs Consistency**: paginated server queries vs client cache freshness
+
+## What I Learned or Improved
+
+- Building a pragmatic real-time system with Socket.IO and cookie auth
+- Structuring a monorepo for clarity: client/server separation with shared constants
+- Operational basics: logging (Winston), rate limits, and error boundaries
+- Admin-first observability with a simple but effective dashboard
+
+<!-- IMAGE: Analytics page showing message volume, p95 latency, and delivery rate -->
+
+## Next Steps
+
+- Per-conversation roles and moderator tools beyond admin-only gates
+- E2EE experiments for DMs with safety tooling for groups
+- Full-text message search and media galleries
+- Mobile push notifications and background sync
+
+---
+
+References: [HelloTalk GitHub repository](https://github.com/OfficialGopi/hellotalk)

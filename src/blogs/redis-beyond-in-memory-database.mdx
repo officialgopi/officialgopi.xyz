@@ -1,0 +1,138 @@
+---
+title: "Redis – Beyond Just an In‑Memory Database"
+date: "2025-08-09"
+excerpt: "Practical patterns with Redis: caching, rate limits, streams, pub/sub, locks, and Lua. Tradeoffs, pitfalls, and production guidance."
+---
+
+# Redis – Beyond Just an In‑Memory Database
+
+Redis is often labeled a cache, but it’s a **multi‑model data platform** that can power queues, search, coordination, and analytics when used thoughtfully.
+
+<!-- IMAGE: Redis components overview: keys, pub/sub, streams, modules, clustering -->
+
+## Project Name and Context
+
+- **Project**: Redis usage patterns for production systems
+- **Context**: Web backends, jobs, rate limiting, realtime features
+- **Goal**: Low‑latency primitives with predictable ops and cost
+
+## Functionality and Purpose
+
+- **Caching** (write‑through, write‑around, cache‑aside)
+- **Rate limiting** (token bucket/leaky bucket)
+- **Queues/Streams** for background work
+- **Distributed locks** (best‑effort) and coordination
+- **Pub/Sub** for real‑time fan‑out
+
+<!-- IMAGE: Cache architecture with origin DB and Redis sidecar -->
+
+## Problem It Solves
+
+- Offloads hot reads from primary DB
+- Smooths bursty workloads (queue + workers)
+- Enables real‑time UX and collaboration
+- Provides cheap primitives for coordination (with caveats)
+
+## Tech Stack Used
+
+- **Server**: Node.js/TypeScript with `ioredis`
+- **Data**: Redis standalone or cluster, persistence (AOF/RDB)
+- **Observability**: Redis INFO, keyspace notifications, Grafana/Prometheus
+
+## How I Built It (or Use It)
+
+### Cache‑Aside with TTL
+
+```ts
+import Redis from "ioredis";
+const redis = new Redis(process.env.REDIS_URL!);
+
+export async function getUser(userId: string) {
+  const cacheKey = `user:${userId}`;
+  const cached = await redis.get(cacheKey);
+  if (cached) return JSON.parse(cached);
+
+  const fresh = await db.users.findById(userId); // origin
+  if (fresh) await redis.set(cacheKey, JSON.stringify(fresh), "EX", 300);
+  return fresh;
+}
+```
+
+### Token Bucket Rate Limit
+
+```lua
+-- rate_limit.lua (atomic)
+local key = KEYS[1]
+local max = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local now = redis.call('TIME')[1]
+local cnt = tonumber(redis.call('GET', key) or '0')
+if cnt == 0 then redis.call('SETEX', key, window, 1) return 1 end
+if cnt < max then redis.call('INCR', key) return max - (cnt + 1) end
+return 0
+```
+
+```ts
+// usage
+const remaining = await redis.eval(rateLimitLua, 1, `ratelimit:${ip}`, 100, 60);
+if (!remaining) return res.status(429).send("Too many requests");
+```
+
+### Streams for Work Queues
+
+```ts
+// producer
+await redis.xadd("video:ingest", "*", "file", fileId, "u", userId);
+
+// consumer group
+await redis.xgroup("CREATE", "video:ingest", "workers", "$", "MKSTREAM");
+const msgs = await redis.xreadgroup(
+  "GROUP",
+  "workers",
+  workerId,
+  "COUNT",
+  10,
+  "BLOCK",
+  5000,
+  "STREAMS",
+  "video:ingest",
+  ">"
+);
+// ack with XACK after processing
+```
+
+### Best‑Effort Distributed Lock
+
+```ts
+// Simple: SET key value NX PX ttl
+const token = crypto.randomUUID();
+const ok = await redis.set(`lock:resource`, token, "NX", "PX", 5000);
+if (!ok) throw new Error("locked");
+try {
+  // do critical work
+} finally {
+  // Lua compare‑and‑delete to avoid deleting other's lock
+}
+```
+
+## Unique Implementations or System Design
+
+- **Hot key mitigation**: sharding or request coalescing
+- **Stale‑while‑revalidate**: serve cached, refresh in background
+- **Write policies**: choose WT/WA/CA per workload
+- **Persistence**: AOF everysec vs RDB snapshots; understand durability
+
+## Realistic Challenges or Tradeoffs
+
+- **Lossy locks**: Redlock is best‑effort; don’t guard financial invariants
+- **Cache invalidation**: the hard problem—favor TTLs + versioned keys
+- **Memory pressure**: eviction policy (allkeys‑lfu) affects hit ratios
+- **Cluster cost**: network hops; watch p95/99 latency
+
+## What I Learned or Improved
+
+- Treat Redis as a **performance tier**, not a source of truth
+- Push invariants to durable stores; use idempotency on writers
+- Prefer simple, observable patterns over clever ones
+
+<!-- IMAGE: Dashboard showing hit rate, CPU, memory, evictions, and latency -->
