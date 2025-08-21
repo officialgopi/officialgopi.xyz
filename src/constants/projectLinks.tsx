@@ -1,7 +1,7 @@
 export const projectLinks = [
   {
     src: "/projects-images/hellotalk.png",
-    title: "Real Time ChatApp",
+    title: "Hellotalk - A Realtime Chat App",
     description:
       "A full-stack MERN chat app with Socket.io for instant one-on-one messaging, secure JWT authentication, MongoDB chat history, and a responsive Material UI interface, delivering seamless real-time communication across devices",
     link: "https://hellotalk.officialgopi.xyz/",
@@ -15,6 +15,7 @@ export const projectLinks = [
       "TypeScript",
       "Cloudinary",
       "JWT",
+      "Redux Toolkit",
     ],
     githubLink: "https://github.com/OfficialGopi/hellotalk",
   },
