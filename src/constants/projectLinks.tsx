@@ -3,7 +3,7 @@ export const projectLinks = [
     src: "/projects-images/hellotalk.png",
     title: "Hellotalk - A Realtime Chat App",
     description:
-      "A full-stack MERN chat app with Socket.io for instant one-on-one messaging, secure JWT authentication, MongoDB chat history, and a responsive Material UI interface, delivering seamless real-time communication across devices",
+      "A full‑stack real‑time chat platform with one-to-one audio and video calling, group messaging, file sharing, and notifications. Built with React, Node.js, Socket.IO, MongoDB, and WebRTC, featuring a modern responsive UI and an admin dashboard.",
     link: "https://hellotalk.officialgopi.xyz/",
     techStack: [
       "React",
