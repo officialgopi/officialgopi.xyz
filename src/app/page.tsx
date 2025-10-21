@@ -9,6 +9,7 @@ import { motion } from "motion/react";
 import HomeSkillsComponent from "@/components/HomeSkillsComponent";
 import HireMeAsFreeLancerComponent from "@/components/HireMeAsFreeLancerComponent";
 import HomeLifeLogAndUpdates from "@/components/HomeLifeLogAndUpdates";
+import Seperator from "@/components/Seperator";
 
 const page = () => {
   const links: {
@@ -38,8 +39,9 @@ const page = () => {
       transition={{
         duration: 0.3,
       }}
-      className="w-full relative z-0"
+      className="w-full flex  flex-col   z-0"
     >
+      <Seperator topMarginInPx={0} bottomMarginInPx={30} />
       <div className="flex justify-between items-start md:flex-row flex-col-reverse gap-10">
         <div className="flex flex-col items-start gap-1">
           <h1 className="text-4xl font-bold tracking-tight">
@@ -89,10 +91,16 @@ const page = () => {
           {/* <div className=" absolute  w-px h-[300px] bg-gradient-to-b from-transparent via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full top-[0px] left-[calc(100%+5px)]" /> */}
         </div>
       </div>
+      <Seperator topMarginInPx={50} bottomMarginInPx={10} />
+      <Seperator topMarginInPx={0} bottomMarginInPx={10} />
       <HomeBlogsComponent />
+      <Seperator topMarginInPx={10} bottomMarginInPx={0} />
       <HomeProjectsComponent />
+      <Seperator topMarginInPx={10} bottomMarginInPx={10} />
       <HomeSkillsComponent />
+      <Seperator topMarginInPx={50} bottomMarginInPx={10} />
       <HomeLifeLogAndUpdates />
+      <Seperator topMarginInPx={50} bottomMarginInPx={10} />
       <HireMeAsFreeLancerComponent />
     </motion.section>
   );

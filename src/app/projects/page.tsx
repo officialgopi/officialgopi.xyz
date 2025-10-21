@@ -1,3 +1,4 @@
+import Seperator from "@/components/Seperator";
 import ProjectCard from "@/components/ui/ProjectCard";
 import { projectLinks } from "@/constants/projectLinks";
 import Link from "next/link";
@@ -20,7 +21,8 @@ export default function page() {
           I write about technology, learning and memes.
         </span>
       </p>
-      <section className="mt-10">
+      <Seperator topMarginInPx={20} bottomMarginInPx={0} />
+      <section className="">
         <h2 className="text-3xl font-semibold my-5">Full Stack Works</h2>
         <section className=" grid grid-cols-1 md:grid-cols-2  gap-5 w-full">
           {projectLinks.map((project, index) => (
@@ -35,8 +37,9 @@ export default function page() {
             />
           ))}
         </section>
+        <Seperator topMarginInPx={20} bottomMarginInPx={0} />
         <section>
-          <h2 className="text-3xl font-semibold my-5">Upcoming Projects</h2>
+          <h2 className="text-3xl font-semibold my-3">Upcoming Projects</h2>
 
           <ProjectCard
             src={""}

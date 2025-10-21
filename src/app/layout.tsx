@@ -6,6 +6,7 @@ import Container from "@/components/Container";
 import Navbar from "@/components/Navbar";
 import SetTheme from "@/components/SetTheme";
 import Footer from "@/components/Footer";
+import Seperator from "@/components/Seperator";
 
 const geistSans = Inter({
   variable: "--font-inter",
@@ -30,15 +31,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} antialiased bg-white dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50 relative`}
+        className={`${geistSans.variable} antialiased bg-white dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50  overflow-x-hidden`}
       >
         <SetTheme />
         <Container>
           <Navbar />
+          <Seperator topMarginInPx={0} bottomMarginInPx={10} />
           <section className="w-full lg:px-20 md:px-10 px-5 relative z-0">
             {children}
           </section>
+          <Seperator topMarginInPx={20} bottomMarginInPx={0} />
           <Footer />
+          <Seperator topMarginInPx={20} bottomMarginInPx={0} />
         </Container>
       </body>
     </html>

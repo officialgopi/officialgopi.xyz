@@ -25,10 +25,10 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative mt-12 border-t border-neutral-800/50 pt-10 pb-6 text-sm text-neutral-600 dark:text-neutral-400 overflow-hidden">
+    <footer className="relative  border-neutral-800/50 pt-10  text-sm text-neutral-600 dark:text-neutral-400 overflow-hidden">
       {/* Watermark Background */}
       <span className="absolute left-0 bottom-0 flex justify-center items-center pointer-events-none select-none">
-        <span className="text-[6rem] sm:text-[8rem]  font-bold tracking-widest text-neutral-800 dark:text-neutral-900 opacity-5">
+        <span className="text-[6rem] sm:text-[8rem]  font-bold tracking-widest text-neutral-800 dark:text-neutral-900 opacity-20 text-center">
           OFFICIALGOPI
         </span>
       </span>

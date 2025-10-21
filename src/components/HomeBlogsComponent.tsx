@@ -53,7 +53,7 @@ export default function HomeBlogsComponent() {
   }
 
   return (
-    <div className="w-full mt-20">
+    <div className="w-full ">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-3xl font-semibold">Recent Blogs</h2>
         <Link

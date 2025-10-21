@@ -1,6 +1,7 @@
 import { getAllBlogs } from "@/lib/blogs";
 import Link from "next/link";
 import { IconCalendar, IconClock, IconArrowRight } from "@tabler/icons-react";
+import Seperator from "@/components/Seperator";
 
 export default async function BlogsPage() {
   const blogs = await getAllBlogs();
@@ -9,12 +10,13 @@ export default async function BlogsPage() {
     <section className="w-full relative z-0">
       <div className="flex flex-col items-start gap-6">
         <div>
-          <h1 className="text-4xl font-bold">Blog</h1>
+          <h1 className="text-4xl font-bold">Blogs</h1>
           <p className="md:pr-40 text-lg mt-2 text-neutral-700 dark:text-neutral-300">
             Thoughts on technology, development, and building things that
             matter.
           </p>
         </div>
+        <Seperator topMarginInPx={0} bottomMarginInPx={0} />
 
         {blogs.length === 0 ? (
           <div className="w-full text-center py-20">
