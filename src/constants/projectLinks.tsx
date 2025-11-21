@@ -4,7 +4,7 @@ export const projectLinks = [
     title: "Hellotalk - A Realtime Chat App",
     description:
       "A full‑stack real‑time chat platform with one-to-one audio and video calling, group messaging, file sharing, and notifications. Built with React, Node.js, Socket.IO, MongoDB, and WebRTC, featuring a modern responsive UI and an admin dashboard.",
-    link: "https://hellotalk.officialgopi.xyz/",
+    link: "https://hellotalk.officialgopi.me/",
     techStack: [
       "React 19",
       "Vite 7",
@@ -24,14 +24,14 @@ export const projectLinks = [
       "WebRTC",
       "Chart.js",
     ],
-    githubLink: "https://github.com/OfficialGopi/hellotalk",
+    githubLink: "https://github.com/officialgopi/hellotalk",
   },
   {
     src: "/projects-images/coderroute.png",
-    title: "CoderRoute",
+    title: "Coderroute",
     description:
-      "A MERN-based LeetCode-style app for solving coding problems, tracking streaks, and personalized revision. Features a live Judge0-powered code editor, AI assistant for hints and debugging, full user auth, admin problem management, and a responsive TailwindCSS + Framer Motion UI.",
-    link: "https://coderroute.officialgopi.xyz/",
+      "A MERN-based DSA solving coding problems, tracking streaks, and personalized revision. Features a live Judge0-powered code editor, AI assistant for hints and debugging, full user auth, admin problem management, and a responsive TailwindCSS + Framer Motion UI.",
+    link: "https://coderroute.tech/",
     techStack: [
       "React",
       "TailwindCss",
@@ -40,9 +40,10 @@ export const projectLinks = [
       "Judge0",
       "PostgreSQL",
       "Prisma",
-      "Groq AI",
+      "Gemini AI",
+      "Liveblocks"
     ],
-    githubLink: "https://github.com/OfficialGopi/coderroute-main",
+    githubLink: "https://github.com/officialgopi/coderroute",
   },
   {
     src: "/projects-images/thumbgen.png",
