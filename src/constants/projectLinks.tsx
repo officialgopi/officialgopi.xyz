@@ -1,6 +1,6 @@
 export const projectLinks = [
   {
-    src: "/projects-images/hellotalk.png",
+    src: "/projects-images/hellotalk_light.png",
     title: "Hellotalk - A Realtime Chat App",
     description:
       "A full‑stack real‑time chat platform with one-to-one audio and video calling, group messaging, file sharing, and notifications. Built with React, Node.js, Socket.IO, MongoDB, and WebRTC, featuring a modern responsive UI and an admin dashboard.",
@@ -27,7 +27,7 @@ export const projectLinks = [
     githubLink: "https://github.com/officialgopi/hellotalk",
   },
   {
-    src: "/projects-images/coderroute.png",
+    src: "/projects-images/coderroute_light.png",
     title: "Coderroute",
     description:
       "A MERN-based DSA solving coding problems, tracking streaks, and personalized revision. Features a live Judge0-powered code editor, AI assistant for hints and debugging, full user auth, admin problem management, and a responsive TailwindCSS + Framer Motion UI.",
