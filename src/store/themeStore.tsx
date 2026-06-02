@@ -14,7 +14,7 @@ export const useThemeStore = create<{
       document.querySelector("html")?.classList.toggle("dark");
       localStorage.setItem(
         "theme",
-        localStorage.getItem("theme") === "dark" ? "light" : "dark"
+        localStorage.getItem("theme") === "dark" ? "light" : "dark",
       );
     }
     set((state) => ({

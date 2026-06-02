@@ -1,8 +1,10 @@
-import { getBlogBySlug, getAllBlogs } from "@/lib/blogs";
-import { notFound } from "next/navigation";
-import { IconCalendar, IconClock, IconArrowLeft } from "@tabler/icons-react";
+import React from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { ArrowLeft, Calendar, Clock } from "lucide-react"; // Swapped out tabler icons for uniform lucide set
+import { getBlogBySlug, getAllBlogs } from "@/lib/blogs";
+import BlogRenderer from "@/components/BlogRenderer";
 
 interface BlogPageProps {
   params: Promise<{
@@ -50,46 +52,58 @@ export default async function BlogPage({ params }: BlogPageProps) {
   }
 
   return (
-    <article className="w-full relative z-0">
-      <div className="flex flex-col items-start gap-6">
+    <article className="w-full relative z-0 select-none text-left">
+      <div className="flex flex-col items-start gap-8 w-full">
+        {/* 1. Asymmetric Return Route Anchor Pipeline */}
         <Link
           href="/blogs"
-          className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors duration-300 group"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-neutral-500 hover:text-neutral-950 dark:hover:text-white transition-colors duration-200 group outline-none"
         >
-          <IconArrowLeft
-            size={20}
-            className="group-hover:-translate-x-1 transition-transform duration-300"
+          <ArrowLeft
+            size={13}
+            className="group-hover:-translate-x-0.5 transition-transform duration-200 text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-950 dark:group-hover:text-white"
           />
           <span>Back to blogs</span>
         </Link>
-
-        <header className="w-full">
-          <div className="flex items-center gap-4 text-sm text-neutral-600 dark:text-neutral-400 mb-4">
+        {/* 2. Structured Article Document Metadata Header Block */}
+        <header className="w-full space-y-4">
+          {/* Monospace System Telemetry Tracker */}
+          <div className="flex items-center gap-4 text-[10px] font-mono font-bold tracking-wider text-neutral-400 dark:text-neutral-600 uppercase">
             <div className="flex items-center gap-1">
-              <IconCalendar size={16} />
+              <Calendar
+                size={12}
+                className="text-neutral-300 dark:text-neutral-700"
+              />
               <span>{blog.date}</span>
             </div>
+            <span className="text-neutral-200 dark:text-neutral-800">\\</span>
             <div className="flex items-center gap-1">
-              <IconClock size={16} />
-              <span>{blog.readingTime} min read</span>
+              <Clock
+                size={12}
+                className="text-neutral-300 dark:text-neutral-700"
+              />
+              <span>{blog.readingTime} min_read</span>
             </div>
           </div>
 
-          <h1 className="text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
+          {/* Master Structural Title */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-neutral-900 dark:text-neutral-50 leading-tight">
             {blog.title}
           </h1>
 
+          {/* Context Executive Abstract Excerpt */}
           {blog.excerpt && (
-            <p className="text-lg text-neutral-700 dark:text-neutral-300 leading-relaxed">
+            <p className="text-base leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal max-w-3xl pt-1">
               {blog.excerpt}
             </p>
           )}
-        </header>
 
-        <div
-          className="w-full prose prose-neutral dark:prose-invert "
-          dangerouslySetInnerHTML={{ __html: blog.content }}
-        />
+          {/* Elegant Horizontal Rule Underlining Document Metadata */}
+          <div className="w-full h-[1px] bg-neutral-100 dark:bg-neutral-900/60 pt-4" />
+        </header>
+        {/* 3. Sanitized HTML Render Output Viewport - Fluid Layout Containment */}
+
+        <BlogRenderer htmlContent={blog.content} />
       </div>
     </article>
   );

@@ -1,38 +1,27 @@
 "use client";
-import Link from "next/link";
+
 import React, { useEffect, useState } from "react";
-import { IconSun, IconMoon } from "@tabler/icons-react";
-import { AnimatePresence, motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Sun, Moon, Terminal } from "lucide-react"; // Updated icon set imports
+import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { useThemeStore } from "@/store/themeStore";
+
 export default function Navbar() {
   const { toggleTheme } = useThemeStore();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const links = [
-    {
-      title: "Home",
-      href: "/",
-    },
-    {
-      title: "Blogs",
-      href: "/blogs",
-    },
-    {
-      title: "Projects",
-      href: "/projects",
-    },
-    {
-      title: "Resume",
-      href: "/resume.pdf",
-    },
+    { title: "Home", href: "/" },
+    { title: "Blogs", href: "/blogs" },
+    { title: "Projects", href: "/projects" },
+    { title: "Resume", href: "/resume.pdf" },
   ];
 
   const checkIsActive = (link: string): boolean => {
-    if (link === "/") {
-      return pathname === link;
-    }
+    if (link === "/") return pathname === link;
     return pathname.startsWith(link);
   };
 
@@ -41,127 +30,141 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="h-[100px] w-full  flex items-center backdrop-blur-lg bg-white/50 dark:bg-neutral-950/50 sticky top-0 left-0   z-[100]">
-      <nav className="flex items-center justify-between w-full h-[40px] px-2">
-        <motion.button
-          initial={{
-            x: -100,
-            opacity: 0,
-          }}
-          animate={{
-            x: 0,
-            opacity: 1,
-          }}
-          className="cursor-pointer border px-2 py-1 border-neutral-500/50  rounded-4xl"
-          onClick={() => {
-            toggleTheme();
-          }}
-        >
-          <motion.span
-            whileInView={{ rotate: -360 }}
-            className="text-neutral-600 flex dark:hidden"
+    <div className="fixed top-5 left-0 right-0 w-full flex justify-center z-50 px-4 select-none pointer-events-none">
+      <header className="w-full max-w-2xl bg-white/70 dark:bg-[#0a0a0b]/75 backdrop-blur-md border border-neutral-200/60 dark:border-neutral-800/50 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.03)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.35)] transition-all duration-300 relative pointer-events-auto">
+        <nav className="flex items-center justify-between w-full h-12 pl-4 pr-1.5">
+          {/* Identity Tag Segment */}
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-tight text-neutral-900 dark:text-neutral-100 hover:opacity-80 transition-opacity outline-none"
           >
-            <IconSun />
-          </motion.span>
-          <motion.span
-            whileInView={{ rotate: 360 }}
-            className="text-neutral-600 dark:flex hidden"
-          >
-            <IconMoon />
-          </motion.span>
-        </motion.button>
-        <motion.div
-          initial={{
-            opacity: 0,
-            filter: "blur(50px)",
-          }}
-          whileInView={{
-            opacity: 1,
-            filter: "blur(0)",
-          }}
-          className=" items-center justify-center  text-sm  border border-neutral-500/50 rounded-3xl h-full px-2 hidden sm:flex overflow-hidden"
-        >
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "cursor-pointer h-full px-2 py-2 relative font-medium hover:text-neutral-900 dark:hover:text-neutral-50  text-neutral-600 dark:text-neutral-400    transition duration-300 ease-in-out ",
-                checkIsActive(link.href)
-                  ? "text-neutral-950 dark:text-neutral-50  onNavlinkActiveBottomEffect"
-                  : ""
-              )}
+            <div className="flex items-center justify-center w-5 h-5 rounded-md bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/40 dark:border-neutral-800/40 text-neutral-500 dark:text-neutral-400">
+              <Terminal size={11} strokeWidth={2.5} />
+            </div>
+            <div className="flex items-center gap-1">
+              <span>G.M</span>
+              <span className="text-neutral-300 dark:text-neutral-700 font-normal">
+                /
+              </span>
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">
+                sys
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop Links Navigation Cloud */}
+          <div className="hidden sm:flex items-center gap-0.5 relative h-full py-1.5">
+            {links.map((link) => {
+              const isActive = checkIsActive(link.href);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "px-3 py-1 text-[11px] font-bold tracking-wide rounded-lg relative transition-all duration-200 outline-none",
+                    isActive
+                      ? "text-neutral-950 dark:text-white"
+                      : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200",
+                  )}
+                >
+                  <span className="relative z-20">{link.title}</span>
+
+                  {/* Fluid active route layout capsule background track */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNav"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                      className="absolute inset-0 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/10 dark:border-neutral-800/30 rounded-lg z-10 shadow-3xs"
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Control Utility Core Trigger Interface */}
+          <div className="flex items-center gap-1">
+            {/* Smooth Spring Theme Toggler */}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleTheme}
+              title="Toggle Workspace Theme"
+              className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-xl text-neutral-500 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100/50 dark:hover:bg-neutral-900/40 transition-all duration-200 outline-none"
             >
-              {link.title}
-            </Link>
-          ))}
-        </motion.div>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className=" items-end justify-center  text-sm  border border-neutral-500/50 rounded-sm h-full px-2 flex sm:hidden w-[40px] flex-col gap-1 cursor-pointer "
-        >
-          <div
-            className={cn(
-              "py-px bg-neutral-700 dark:bg-neutral-100 transition-[width] duration-300  ",
-              !isOpen ? "w-2/3" : "w-3/4"
-            )}
-          />
-          <div
-            className={cn(
-              " py-px bg-neutral-700 dark:bg-neutral-100 transition-[width] duration-300  ",
-              !isOpen ? "w-full" : "w-2/3"
-            )}
-          />
-          <div
-            className={cn(
-              " py-px bg-neutral-700 dark:bg-neutral-100 transition-[width] duration-300  ",
-              !isOpen ? "w-3/4" : "w-full"
-            )}
-          />
-        </button>
+              <div className="relative w-4 h-4 flex items-center justify-center">
+                <span className="absolute transform transition-all duration-300 ease-out flex dark:hidden dark:rotate-90 dark:scale-0">
+                  <Sun size={15} strokeWidth={2.5} />
+                </span>
+                <span className="absolute transform transition-all duration-300 ease-out hidden dark:flex -rotate-90 scale-0 dark:rotate-0 dark:scale-100">
+                  <Moon size={15} strokeWidth={2.5} />
+                </span>
+              </div>
+            </motion.button>
+
+            {/* Mobile Adaptive Hamburger Matrix Button Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle Menu Feed"
+              className="flex sm:hidden w-8 h-8 rounded-xl items-center justify-center flex-col gap-1.5 cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-900/40 transition-colors outline-none"
+            >
+              <div
+                className={cn(
+                  "h-[1.2px] bg-neutral-600 dark:bg-neutral-300 transition-all duration-200 rounded-full origin-center",
+                  isOpen ? "w-3.5 rotate-45 translate-y-[2.4px]" : "w-3.5",
+                )}
+              />
+              <div
+                className={cn(
+                  "h-[1.2px] bg-neutral-600 dark:bg-neutral-300 transition-all duration-200 rounded-full origin-center",
+                  isOpen
+                    ? "w-3.5 -rotate-45 -translate-y-[2.4px]"
+                    : "w-2.5 ml-1",
+                )}
+              />
+            </button>
+          </div>
+        </nav>
+
+        {/* Dropdown Mobile Display Framework menu overlay */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{
-                y: -100,
-                opacity: 0,
-                filter: "blur(50px)",
-              }}
-              animate={{
-                y: 0,
-                opacity: 1,
-                filter: "blur(0px)",
-              }}
-              exit={{
-                y: -100,
-                opacity: 0,
-                filter: "blur(50px)",
-              }}
-              whileInView={{
-                y: 0,
-                opacity: 1,
-                filter: "blur(0px)",
-              }}
-              className="absolute top-[100%] left-0 w-[90%] mx-[20] z-100 bg-white dark:bg-neutral-950  sm:hidden flex flex-col items-start  justify-center gap-4  border border-neutral-500/50 rounded-2xl py-3 px-4"
+              initial={{ opacity: 0, y: -4, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -4, scale: 0.98 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="absolute top-[calc(100%+6px)] left-0 right-0 w-full z-50 bg-white/95 dark:bg-[#0a0a0b]/95 border border-neutral-200/80 dark:border-neutral-800/70 rounded-2xl p-1.5 shadow-xl backdrop-blur-xl flex flex-col items-stretch overflow-hidden"
             >
-              {links.map((link, idx) => (
-                <Link
-                  key={idx}
-                  href={link.href}
-                  className="cursor-pointer h-full  py-2 px-2 w-full   font-medium text-neutral-700 dark:text-neutral-400     ease-in-out group "
-                >
-                  <span className="transition duration-300 group-hover:translate-y-[-1px] group-hover:text-neutral-950 dark:group-hover:text-neutral-50">
-                    {link.title}
-                  </span>
-                  {links.length - 1 !== idx && (
-                    <div className="bg-neutral-500/50 dark:bg-neutral-500/50 h-px w-full mt-[16px]" />
-                  )}
-                </Link>
-              ))}
+              {links.map((link, idx) => {
+                const isActive = checkIsActive(link.href);
+
+                return (
+                  <Link
+                    key={idx}
+                    href={link.href}
+                    className={cn(
+                      "cursor-pointer w-full py-2.5 px-3.5 text-xs font-bold tracking-wide rounded-xl transition-all duration-150 flex items-center justify-between group outline-none",
+                      isActive
+                        ? "bg-neutral-100 dark:bg-neutral-900 text-neutral-950 dark:text-white"
+                        : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 hover:text-neutral-950 dark:hover:text-white",
+                    )}
+                  >
+                    <span>{link.title}</span>
+                    <span className="opacity-0 group-hover:opacity-40 transition-opacity text-[9px] font-mono font-bold tracking-widest uppercase">
+                      // router_go
+                    </span>
+                  </Link>
+                );
+              })}
             </motion.div>
           )}
         </AnimatePresence>
-      </nav>
-    </header>
+      </header>
+    </div>
   );
 }

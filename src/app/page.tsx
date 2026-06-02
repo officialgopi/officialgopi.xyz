@@ -1,109 +1,134 @@
 "use client";
 
-import HomeBlogsComponent from "@/components/HomeBlogsComponent";
-import HomeProjectsComponent from "@/components/HomeProjectsComponent";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
+import HomeBlogsComponent from "@/components/HomeBlogsComponent";
+import HomeProjectsComponent from "@/components/HomeProjectsComponent";
 import HomeSkillsComponent from "@/components/HomeSkillsComponent";
-import HireMeAsFreeLancerComponent from "@/components/HireMeAsFreeLancerComponent";
 import HomeLifeLogAndUpdates from "@/components/HomeLifeLogAndUpdates";
+import HireMeAsFreeLancerComponent from "@/components/HireMeAsFreeLancerComponent";
 import Seperator from "@/components/Seperator";
 
-const page = () => {
-  const links: {
-    [key: string]: {
-      name: string;
-      url?: string;
-    };
-  } = {
+export default function Page() {
+  const links = {
     coderroute: {
       name: "CoderRoute",
       url: "https://coderroute.officialgopi.xyz",
     },
     smartclass: {
       name: "SMARTClass",
+      url: "#",
     },
   };
+
   return (
     <motion.section
-      initial={{
-        opacity: 0,
-        filter: "blur(50px)",
-      }}
-      whileInView={{
-        opacity: 1,
-        filter: "blur(0px)",
-      }}
-      transition={{
-        duration: 0.3,
-      }}
-      className="w-full flex  flex-col   z-0"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="w-full flex flex-col z-0 max-w-5xl mx-auto px-4 md:px-0"
     >
-      <Seperator topMarginInPx={0} bottomMarginInPx={30} />
-      <div className="flex justify-between items-start md:flex-row flex-col-reverse gap-10">
-        <div className="flex flex-col items-start gap-1">
-          <h1 className="text-4xl font-bold tracking-tight">
+      {/* Initial Landing Header Top Border */}
+      <Seperator topMarginInPx={0} bottomMarginInPx={24} label="SYS_START" />
+
+      {/* Hero Bio Introduction Block Layout */}
+      <div className="flex justify-between items-start flex-col-reverse md:flex-row gap-10 w-full">
+        {/* Left Information Column */}
+        <div className="flex flex-col items-start gap-3 max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-neutral-950 via-neutral-800 to-neutral-700 dark:from-white dark:via-neutral-100 dark:to-neutral-400 bg-clip-text text-transparent">
             Gopikanta Mondal
           </h1>
-          <p className="text-lg tracking-tight text-neutral-700 dark:text-neutral-300">
-            Building{" "}
+
+          <p className="text-lg tracking-tight text-neutral-800 dark:text-neutral-200 font-medium leading-relaxed">
+            Full-Stack Software Engineer specialized in architecting scalable
+            SaaS infrastructures, interactive developer systems like{" "}
             <Link
-              href={links.coderroute.url ?? "#"}
+              href={links.coderroute.url}
               target="_blank"
-              className="p-1 font-semibold rounded-sm mr-1 bg-neutral-100 dark:bg-neutral-800"
+              rel="noopener noreferrer"
+              className="px-1.5 py-0.5 font-bold rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 hover:opacity-80 transition-opacity"
             >
               {links.coderroute.name}
             </Link>
-            ,
+            , and educational learning platforms like{" "}
             <Link
-              href={links.smartclass.url ?? "#"}
-              target="_blank"
-              className="p-1 font-semibold rounded-sm mr-1 bg-neutral-100 dark:bg-neutral-800"
+              href={links.smartclass.url}
+              className="px-1.5 py-0.5 font-bold rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 hover:opacity-80 transition-opacity"
             >
               {links.smartclass.name}
             </Link>
-            and other{" "}
-            <span className="p-1 font-semibold rounded-sm mr-1 ">
-              cool things
-            </span>
+            .
           </p>
-          <span className="mt-[20] text-neutral-600 dark:text-neutral-400">
-            Full Stack Web Developer building SaaS products and web apps.
-            <br />
-            Find me on twitter for tech updates and memes.
-          </span>
+
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal max-w-xl mt-3">
+            Focused on performance optimization, clean developer telemetry, and
+            robust data workflows. Connect with me on{" "}
+            <a
+              href="https://x.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-neutral-900 dark:text-neutral-100 underline underline-offset-4 hover:opacity-80 transition-opacity"
+            >
+              Twitter
+            </a>{" "}
+            for regular engineering insights and technical updates.
+          </p>
         </div>
-        <div className="relative z-0 top-[10px]">
-          <div className=" absolute  w-px h-[150%] bg-gradient-to-b from-transparent via-cyan-500 dark:via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full top-[50%] translate-y-[-50%] right-[-5px]" />
-          <div className=" absolute  w-px h-[150%] bg-gradient-to-b from-transparent via-cyan-500 dark:via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full top-[50%] translate-y-[-50%] left-[-5px]" />
-          <div className=" absolute  h-px w-[150%] bg-gradient-to-r from-transparent via-cyan-500 dark:via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full top-[-5px] translate-x-[50%] right-[50%]" />
-          <div className=" absolute  h-px w-[150%] bg-gradient-to-r from-transparent via-cyan-500 dark:via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full bottom-[-5px] translate-x-[50%] right-[50%]" />
-          <Image
-            width={150}
-            height={150}
-            className="rounded-sm"
-            src={"/profile-pic.jpg"}
-            alt={""}
-          />
-          {/* <div className=" absolute  h-px w-[300px] bg-gradient-to-r from-transparent via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full top-[-5px] right-[10px]" /> */}
-          {/* <div className=" absolute  w-px h-[300px] bg-gradient-to-b from-transparent via-cyan-50/10 to-transparent   dark:bg-neutral-800 pointer-events-none z-[-1] rounded-full top-[0px] left-[calc(100%+5px)]" /> */}
+
+        {/* Right Column: Premium Animated Image Frame Matrix */}
+        <div className="relative shrink-0 md:mt-2">
+          {/* Futuristic laser cross-lines extending symmetrically */}
+          <div className="absolute w-px h-[140%] bg-gradient-to-b from-transparent via-neutral-300 dark:via-neutral-800 to-transparent left-[-8px] top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="absolute w-px h-[140%] bg-gradient-to-b from-transparent via-neutral-300 dark:via-neutral-800 to-transparent right-[-8px] top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="absolute h-px w-[140%] bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-800 to-transparent top-[-8px] left-1/2 -translate-x-1/2 pointer-events-none" />
+          <div className="absolute h-px w-[140%] bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-800 to-transparent bottom-[-8px] left-1/2 -translate-x-1/2 pointer-events-none" />
+
+          <div className="w-[130px] h-[130px] sm:w-[140px] sm:h-[140px] relative overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/40 dark:border-neutral-800/60 shadow-sm">
+            <Image
+              fill
+              sizes="140px"
+              className="object-cover grayscale hover:grayscale-0 transition-all duration-500 ease-in-out"
+              src="/profile-pic.jpg"
+              alt="Gopikanta Mondal profile picture"
+              priority
+            />
+          </div>
         </div>
       </div>
-      <Seperator topMarginInPx={50} bottomMarginInPx={10} />
-      <Seperator topMarginInPx={0} bottomMarginInPx={10} />
-      <HomeBlogsComponent />
-      <Seperator topMarginInPx={10} bottomMarginInPx={0} />
-      <HomeProjectsComponent />
-      <Seperator topMarginInPx={10} bottomMarginInPx={10} />
-      <HomeSkillsComponent />
-      <Seperator topMarginInPx={50} bottomMarginInPx={10} />
-      <HomeLifeLogAndUpdates />
-      <Seperator topMarginInPx={50} bottomMarginInPx={10} />
-      <HireMeAsFreeLancerComponent />
+
+      {/* Main Streamlined Sub-component Presentation Sections */}
+      {/* Container blocks handle uniform paddings, keeping selectors isolated from row gaps */}
+      <div className="w-full mt-12 space-y-0">
+        <div className="pb-8">
+          <HomeBlogsComponent />
+        </div>
+
+        <Seperator topMarginInPx={0} bottomMarginInPx={0} label="LOG_FEED" />
+
+        <div className="py-8">
+          <HomeProjectsComponent />
+        </div>
+
+        <Seperator topMarginInPx={0} bottomMarginInPx={0} label="CORE_STACK" />
+
+        <div className="py-8">
+          <HomeSkillsComponent />
+        </div>
+
+        <Seperator topMarginInPx={0} bottomMarginInPx={0} label="LIFE_LOG" />
+
+        <div className="py-8">
+          <HomeLifeLogAndUpdates />
+        </div>
+
+        <Seperator topMarginInPx={0} bottomMarginInPx={0} label="CTA_INBOUND" />
+
+        <div className="pt-8 mb-8">
+          <HireMeAsFreeLancerComponent />
+        </div>
+      </div>
     </motion.section>
   );
-};
-
-export default page;
+}

@@ -8,15 +8,16 @@ import SetTheme from "@/components/SetTheme";
 import Footer from "@/components/Footer";
 import Seperator from "@/components/Seperator";
 
-const geistSans = Inter({
+const interFont = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap", // Hardware accelerated layout optimization hook
 });
 
 export const metadata: Metadata = {
   title: "Portfolio | OfficialGopi",
   description:
-    "OfficialGopi – Full-stack developer specializing in MERN stack, WebRTC, Prisma, and Tailwind CSS. I build scalable, high-performance web apps, real-time communication platforms, and modern, responsive UIs with clean code and optimized performance.",
+    "OfficialGopi – AI Full-Stack Web Developer specializing in Next.js, Node.js, Prisma, WebRTC, and scalable cloud architectures. Engineering real-time platforms and performant modern products with clean, high-density aesthetics.",
   icons: {
     icon: "/profile-pic.jpg",
     apple: "/profile-pic.jpg",
@@ -31,18 +32,28 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} antialiased bg-white dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50  overflow-x-hidden`}
+        className={`${interFont.variable} font-sans antialiased bg-white dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50 overflow-x-hidden`}
       >
+        {/* Isomorphic Dark Mode Structural Provider Initialization Hydration Wrapper */}
         <SetTheme />
+
+        {/* Floating Top Nav Anchor Channel - Rendered cleanly at root scope */}
+        <Navbar />
+
+        {/* Global Page Layout Wrapper Frame Grid */}
         <Container>
-          <Navbar />
-          <Seperator topMarginInPx={0} bottomMarginInPx={10} />
-          <section className="w-full lg:px-20 md:px-10 px-5 relative z-0">
-            {children}
-          </section>
-          <Seperator topMarginInPx={20} bottomMarginInPx={0} />
+          {/* Main Context Dynamic Page Slot */}
+          <section className="w-full relative z-10">{children}</section>
+
+          {/* Core Visual System Structural End Splitter */}
+          <Seperator
+            topMarginInPx={40}
+            bottomMarginInPx={0}
+            label="END_OF_TRANSCRIPT"
+          />
+
+          {/* Brutalist System Terminal Metric Footer */}
           <Footer />
-          <Seperator topMarginInPx={20} bottomMarginInPx={0} />
         </Container>
       </body>
     </html>

@@ -41,7 +41,7 @@ export const projectLinks = [
       "PostgreSQL",
       "Prisma",
       "Gemini AI",
-      "Liveblocks"
+      "Liveblocks",
     ],
     githubLink: "https://github.com/officialgopi/coderroute",
   },

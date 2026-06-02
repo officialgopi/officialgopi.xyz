@@ -1,31 +1,45 @@
 "use client";
 
+import React, { useMemo } from "react";
 import { projectLinks } from "@/constants/projectLinks";
-import React, { useState } from "react";
 import ProjectCard from "./ui/ProjectCard";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { ArrowUpRight } from "lucide-react"; // Imported pristine matching lucide icon
+import { motion } from "framer-motion";
 
-const HomeProjectsComponent = () => {
-  const [projects, _] = useState<typeof projectLinks>(projectLinks.slice(0, 2));
+export default function HomeProjectsComponent() {
+  // Safe extraction of recent engineering projects without redundant state initialization
+  const recentProjects = useMemo(() => projectLinks.slice(0, 2), []);
+
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        filter: "blur(50px)",
-      }}
-      animate={{
-        opacity: 1,
-        filter: "blur(0px)",
-      }}
-      transition={{
-        duration: 0.3,
-      }}
-      className="w-full mt-5 flex flex-col"
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.4 }}
+      className="w-full mt-4 flex flex-col"
     >
-      <h2 className="text-3xl font-bold">Projects</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-        {projects.map((project, index) => (
+      {/* Section Master Header Area Row */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold tracking-tight text-neutral-950 dark:text-neutral-100">
+          Featured Engineering
+        </h2>
+
+        <Link
+          href="/projects"
+          className="hidden sm:flex items-center gap-0.5 text-xs font-bold text-neutral-500 hover:text-neutral-950 dark:hover:text-white transition-colors duration-200 group outline-none"
+        >
+          <span>See all projects</span>
+          <ArrowUpRight
+            size={14}
+            className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-950 dark:group-hover:text-white"
+          />
+        </Link>
+      </div>
+
+      {/* High-Fidelity 2-Column Responsive Layout Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {recentProjects.map((project, index) => (
           <ProjectCard
             key={index}
             src={project.src}
@@ -37,30 +51,20 @@ const HomeProjectsComponent = () => {
           />
         ))}
       </div>
-      <div className="w-full flex items-center justify-center mt-5">
+
+      {/* Mobile Screen Navigation Fallback Route Button */}
+      <div className="w-full flex sm:hidden items-center justify-center mt-6">
         <Link
           href="/projects"
-          className="text-sm flex items-center gap-1 hover:opacity-70 transition-opacity "
+          className="text-xs font-bold flex items-center gap-0.5 text-neutral-500 hover:text-neutral-950 dark:hover:text-white transition-colors group outline-none"
         >
-          <span>See more</span>
-          <svg
-            className="h-4 w-4 ml-1"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            ></path>
-          </svg>
+          <span>See all projects</span>
+          <ArrowUpRight
+            size={14}
+            className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
+          />
         </Link>
       </div>
     </motion.div>
   );
-};
-
-export default HomeProjectsComponent;
+}
